@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "710133740011",
+    "project_id": "unipay-ug",
+    "storage_bucket": "unipay-ug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710133740011:android:1ee0f90f9041b0382d29ae",
+        "android_client_info": {
+          "package_name": "com.matt.unipay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710133740011-4qctu0i8j8kbb9saemc1bn78rveq5for.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu6fgc6t14HJHvmb0f6VSVlOrSqDz40DU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710133740011-4qctu0i8j8kbb9saemc1bn78rveq5for.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
