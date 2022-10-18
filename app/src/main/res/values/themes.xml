@@ -13,4 +13,23 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+
+    <style name="MyCustomTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorAccent">@color/purple_500</item>
+        <item name="OTPButtonStyle">@color/purple_500</item>
+        <item name="PayButtonStyle">@color/purple_500</item>
+        <item name="OTPHeaderStyle">@style/otpHeaderStyle</item>
+        <item name="PinButtonStyle">@color/purple_500</item>
+        <item name="PinHeaderStyle">@style/myotpHeaderStyle</item>
+        <item name="PaymentTileTextStyle">@style/TextAppearance.AppCompat.Headline</item>
+    </style>
+
+    <style name="myotpHeaderStyle">
+        <item name="android:background">@color/purple_500</item>
+    </style>
 </resources>
