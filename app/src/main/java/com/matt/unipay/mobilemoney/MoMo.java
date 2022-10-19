@@ -14,16 +14,17 @@ import com.flutterwave.raveandroid.rave_java_commons.RaveConstants;
 import com.matt.unipay.R;
 
 public class MoMo {
-    private double price = 0;
-    private String fname;
-    private String phone;
     Context context;
+    private double price = 500;
+    private String fname = "Matthew";
+    private String phone = "0773296451";
+    private String email = "reypak.sweg@gmail.com";
 
     public void initMobileMoney(Context context) {
 
         new RaveUiManager((Activity) context).setAmount(price)
                 .setCurrency(RaveConstants.UGX)
-//                .setEmail(email)
+                .setEmail(email)
                 .setfName(fname)
                 .setPublicKey(pub_key)
                 .setEncryptionKey(enc_key)
@@ -31,7 +32,7 @@ public class MoMo {
                 .acceptUgMobileMoneyPayments(true)
                 .setTxRef("MC-3243e")
                 .withTheme(R.style.MyCustomTheme)
-                .onStagingEnv(false)
+                .onStagingEnv(true)
                 .initialize();
     }
 

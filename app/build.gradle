@@ -35,4 +35,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.1'
 //    implementation 'com.github.Flutterwave.rave-android:rave_presentation:2.1.39'
     implementation 'com.github.flutterwave.rave-android:rave_android:2.1.39'
+
+    // volley
+    implementation 'com.android.volley:volley:1.2.1'
 }

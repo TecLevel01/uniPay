@@ -1,0 +1,127 @@
+package com.matt.unipay.activities;
+
+import static com.matt.unipay.util.Util.userRef;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.matt.unipay.R;
+import com.matt.unipay.util.Util;
+import com.matt.unipay.util.Util.MyProgressDialog;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class Register extends AppCompatActivity {
+    String fname, lname, course, regno, gender, email, pwrd;
+    private AutoCompleteTextView autoCompleteTextView;
+    private EditText etEmail, etPwrd, etFname, etLname, etRegNo, etCourse;
+    private FirebaseAuth auth;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+        getSupportActionBar().setTitle("Register");
+
+        mInit();
+        setGender();
+    }
+
+    private void setGender() {
+        ArrayList<String> gender = new ArrayList<>();
+        gender.add("Male");
+        gender.add("Female");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, gender);
+        autoCompleteTextView.setThreshold(1);
+        autoCompleteTextView.setAdapter(adapter);
+    }
+
+    private void mInit() {
+        autoCompleteTextView = findViewById(R.id.list1);
+        etEmail = findViewById(R.id.email);
+        etPwrd = findViewById(R.id.pwrd);
+        etFname = findViewById(R.id.fname);
+        etLname = findViewById(R.id.lname);
+        etCourse = findViewById(R.id.course);
+        etRegNo = findViewById(R.id.regno);
+
+        auth = FirebaseAuth.getInstance();
+    }
+
+
+    public void openLogin(View view) {
+        Util.loadActivity(this, Login.class);
+        finish();
+    }
+
+    public void startRegister(View view) {
+        validateData();
+    }
+
+    private void validateData() {
+        email = etEmail.getText().toString().trim();
+        fname = etFname.getText().toString().trim();
+        lname = etLname.getText().toString().trim();
+        pwrd = etPwrd.getText().toString().trim();
+        regno = etRegNo.getText().toString().trim();
+        course = etCourse.getText().toString().trim();
+        gender = autoCompleteTextView.getText().toString();
+
+        if (!email.isEmpty() && !pwrd.isEmpty() && !regno.isEmpty()) {
+            RegisterUser();
+        } else {
+            Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void RegisterUser() {
+
+        MyProgressDialog dialog = new MyProgressDialog(this, "Signing up");
+
+        auth.createUserWithEmailAndPassword(email, pwrd).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+
+                MyProgressDialog dialog2 = new MyProgressDialog(this, "Logging in");
+
+                FirebaseUser user = auth.getCurrentUser();
+                HashMap<String, Object> userdata = new HashMap<>();
+                userdata.put("fname", fname);
+                userdata.put("lname", lname);
+                userdata.put("email", user.getEmail());
+                userdata.put("pwrd", pwrd);
+                userdata.put("course", course);
+                userdata.put("gender", gender);
+                userdata.put("regno", regno);
+
+                // sending data
+                userRef.document(user.getUid()).set(userdata).addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+
+//                        updateProfile(user, uname);
+                        Util.loadActivity(this, Dashboard.class);
+                        Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        String msg = task.getException().getMessage();
+                        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                    dialog2.dismiss();
+                });
+            } else {
+                String msg = task.getException().getMessage();
+                Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+            }
+            dialog.dismiss();
+        });
+
+    }
+}
