@@ -6,4 +6,5 @@
     <string name="enc_key">FLWSECK_TESTda6db672bf94</string>
     <string name="msg_login">Don\'t have an account? <b>Sign Up</b> </string>
     <string name="msg_login2">Already have an account? <b>Sign In</b></string>
+    <string name="msg_pin_modal">Enter your Mobile Money number &amp; PIN</string>
 </resources>

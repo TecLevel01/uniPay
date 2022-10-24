@@ -9,4 +9,6 @@ public class Strings {
 
     public static String susers = "users";
     public static String scourse = "course";
+    public static String spayments = "payments";
+    public static String sdata = "data";
 }

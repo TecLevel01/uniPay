@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
-    String fname, lname, course, regno, gender, email, pwrd;
+    String fname, lname, course, regno, gender, email, pwrd, year, sem;
     private AutoCompleteTextView autoCompleteTextView, yearAC, semAC, courseAC;
     private EditText etEmail, etPwrd, etFname, etLname, etRegNo;
     private FirebaseAuth auth;
@@ -96,6 +96,8 @@ public class Register extends AppCompatActivity {
         regno = etRegNo.getText().toString().trim();
         course = courseAC.getText().toString().trim();
         gender = autoCompleteTextView.getText().toString();
+        year = yearAC.getText().toString();
+        sem = semAC.getText().toString();
 
         if (!email.isEmpty() && !pwrd.isEmpty() && !regno.isEmpty()) {
             RegisterUser();
@@ -122,6 +124,8 @@ public class Register extends AppCompatActivity {
                 userdata.put("course", course);
                 userdata.put("gender", gender);
                 userdata.put("regno", regno);
+                userdata.put("year", year);
+                userdata.put("sem", sem);
 
                 // sending data
                 userRef.document(user.getUid()).set(userdata).addOnCompleteListener(task1 -> {

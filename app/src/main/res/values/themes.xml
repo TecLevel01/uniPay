@@ -17,7 +17,7 @@
     </style>
 
 
-   <!-- <style name="MyCustomTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="MyCustomTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary_500</item>
         <item name="colorPrimaryDark">@color/primary_700</item>
         <item name="colorSecondaryVariant">@color/primary_200</item>
@@ -33,7 +33,7 @@
 
     <style name="myotpHeaderStyle">
         <item name="android:background">@color/primary_500</item>
-    </style>-->
+    </style>
 
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">

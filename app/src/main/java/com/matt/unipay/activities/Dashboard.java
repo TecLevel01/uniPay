@@ -31,6 +31,7 @@ public class Dashboard extends AppCompatActivity {
     private MoMo moMo;
     private RecyclerView recView1, recView2;
     private ArrayList<DashboardItem> items1, items2;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,35 +48,41 @@ public class Dashboard extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();*/
 
-      /*  moMo = new MoMo();
-        moMo.initMobileMoney(this); */
+        moMo = new MoMo();
+        moMo.initMobileMoney(this);
 
        /* AirtelPay airtelPay = new AirtelPay(this);
         airtelPay.initPay2();*/
     }
 
     private void getData() {
-        items1.add(new DashboardItem("Tuition", PriceFormat(900000)));
-        items1.add(new DashboardItem("Paid Amount", PriceFormat(600000)));
-        items1.add(new DashboardItem("Balance", PriceFormat(300000)));
 
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            Util.userRef.document(user.getUid()).get().addOnSuccessListener(documentSnapshot -> {
-                UserItem userItem = documentSnapshot.toObject(UserItem.class);
-                items2.add(new DashboardItem("Year of Study", userItem.getYear()));
-                items2.add(new DashboardItem("Semester", userItem.getSem()));
-                items2.add(new DashboardItem("Course", userItem.getCourse()));
+            Util.userRef.document(user.getUid()).addSnapshotListener((value, error) -> {
+                if (error == null) {
+                    if (value.exists()) {
+                        UserItem userItem = value.toObject(UserItem.class);
 
-                DashboardAdapter adapter2 = new DashboardAdapter(this, items2, R.drawable.ic_outline_library_books_24);
-                recView2.setAdapter(adapter2);
+                        items1.add(new DashboardItem("Tuition", PriceFormat(900000)));
+                        items1.add(new DashboardItem("Paid Amount", PriceFormat(userItem.getPaid())));
+                        items1.add(new DashboardItem("Balance", PriceFormat(300000)));
+
+                        items2.add(new DashboardItem("Year of Study", userItem.getYear()));
+                        items2.add(new DashboardItem("Semester", userItem.getSem()));
+                        items2.add(new DashboardItem("Course", userItem.getCourse()));
+
+                        DashboardAdapter adapter2 = new DashboardAdapter(this, items2, R.drawable.ic_outline_library_books_24);
+                        recView2.setAdapter(adapter2);
+
+                        DashboardAdapter adapter1 = new DashboardAdapter(this, items1, R.drawable.ic_baseline_attach_money_24);
+                        recView1.setAdapter(adapter1);
+                    }
+                }
             });
         }
 
-        DashboardAdapter adapter1 = new DashboardAdapter(this, items1, R.drawable.ic_baseline_attach_money_24);
-
-        recView1.setAdapter(adapter1);
     }
 
     private void mInit() {
@@ -132,5 +139,9 @@ public class Dashboard extends AppCompatActivity {
 
     public void openPay(View view) {
         Util.loadActivity(this, Payment.class);
+    }
+
+    public void openTransactions(View view) {
+        Util.loadActivity(this, Transactions.class);
     }
 }

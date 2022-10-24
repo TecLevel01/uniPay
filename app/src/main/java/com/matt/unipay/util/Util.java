@@ -1,10 +1,13 @@
 package com.matt.unipay.util;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -29,6 +32,7 @@ import java.util.HashMap;
 public class Util {
     public static CollectionReference userRef = FirebaseFirestore.getInstance().collection(Strings.susers);
     public static CollectionReference courseRef = FirebaseFirestore.getInstance().collection(Strings.scourse);
+    public static CollectionReference paymentsRef = FirebaseFirestore.getInstance().collection(Strings.spayments);
 
     public static void loadActivity(Context context, Class<?> activity) {
         Intent intent = new Intent(context, activity);
@@ -45,7 +49,7 @@ public class Util {
 
     public static String dateFormat(Date date) {
         SimpleDateFormat formatter;
-        formatter = new SimpleDateFormat("dd MMM yyyy • HH:mm");
+        formatter = new SimpleDateFormat("dd MMM yy • HH:mm");
         return formatter.format(date);
     }
 
@@ -153,6 +157,14 @@ public class Util {
 
     private static ArrayAdapter<String> getACAdapter(ArrayList<String> year, View view) {
         return new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, year);
+    }
+
+    public static Dialog dialog(Context context, int layoutID) {
+        Dialog dialog = new Dialog(context);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(layoutID);
+        dialog.show();
+        return dialog;
     }
 
     public static class MyProgressDialog extends ProgressDialog {
