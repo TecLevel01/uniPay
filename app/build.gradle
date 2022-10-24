@@ -31,11 +31,18 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
     implementation 'com.google.firebase:firebase-firestore:23.0.1'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
+    // Firebase UI
+    implementation 'com.firebaseui:firebase-ui-firestore:8.0.0'
+
 //    implementation 'com.github.Flutterwave.rave-android:rave_presentation:2.1.39'
-    implementation 'com.github.flutterwave.rave-android:rave_android:2.1.39'
+//    implementation 'com.github.flutterwave.rave-android:rave_android:2.1.39'
 
     // volley
-    implementation 'com.android.volley:volley:1.2.1'
+//    implementation 'com.android.volley:volley:1.2.1'
+
+    //GSON Object
+    implementation 'com.google.code.gson:gson:2.8.8'
 }

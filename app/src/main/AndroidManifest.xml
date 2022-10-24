@@ -14,6 +14,18 @@
         android:theme="@style/Theme.UniPay"
         tools:targetApi="31">
         <activity
+            android:name=".activities.StudentView"
+            android:exported="true" />
+        <activity
+            android:name=".activities.Courses"
+            android:exported="true" />
+        <activity
+            android:name=".activities.AdminView"
+            android:exported="true" />
+        <activity
+            android:name=".activities.Payment"
+            android:exported="true" />
+        <activity
             android:name=".activities.Register"
             android:exported="true" />
         <activity

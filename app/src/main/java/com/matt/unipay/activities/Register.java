@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.matt.unipay.R;
 import com.matt.unipay.util.Util;
 import com.matt.unipay.util.Util.MyProgressDialog;
@@ -22,8 +23,8 @@ import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
     String fname, lname, course, regno, gender, email, pwrd;
-    private AutoCompleteTextView autoCompleteTextView;
-    private EditText etEmail, etPwrd, etFname, etLname, etRegNo, etCourse;
+    private AutoCompleteTextView autoCompleteTextView, yearAC, semAC, courseAC;
+    private EditText etEmail, etPwrd, etFname, etLname, etRegNo;
     private FirebaseAuth auth;
 
     @Override
@@ -33,25 +34,45 @@ public class Register extends AppCompatActivity {
         getSupportActionBar().setTitle("Register");
 
         mInit();
-        setGender();
+        setACs();
+        setCourse();
     }
 
-    private void setGender() {
+    private void setCourse() {
+        ArrayList<String> course = new ArrayList<>();
+        Util.courseRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DocumentSnapshot snapshot : task.getResult()) {
+                    String n = snapshot.getString("name");
+                    course.add(n);
+                }
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, course);
+            courseAC.setAdapter(adapter);
+        });
+    }
+
+    private void setACs() {
         ArrayList<String> gender = new ArrayList<>();
         gender.add("Male");
         gender.add("Female");
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, gender);
+        yearAC = Util.setYearAC(getWindow().getDecorView().getRootView());
+        semAC = Util.setSemAC(getWindow().getDecorView().getRootView());
+
         autoCompleteTextView.setThreshold(1);
         autoCompleteTextView.setAdapter(adapter);
+
     }
 
     private void mInit() {
         autoCompleteTextView = findViewById(R.id.list1);
+        courseAC = findViewById(R.id.course);
         etEmail = findViewById(R.id.email);
         etPwrd = findViewById(R.id.pwrd);
         etFname = findViewById(R.id.fname);
         etLname = findViewById(R.id.lname);
-        etCourse = findViewById(R.id.course);
         etRegNo = findViewById(R.id.regno);
 
         auth = FirebaseAuth.getInstance();
@@ -73,7 +94,7 @@ public class Register extends AppCompatActivity {
         lname = etLname.getText().toString().trim();
         pwrd = etPwrd.getText().toString().trim();
         regno = etRegNo.getText().toString().trim();
-        course = etCourse.getText().toString().trim();
+        course = courseAC.getText().toString().trim();
         gender = autoCompleteTextView.getText().toString();
 
         if (!email.isEmpty() && !pwrd.isEmpty() && !regno.isEmpty()) {
