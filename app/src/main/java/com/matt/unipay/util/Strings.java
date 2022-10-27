@@ -11,4 +11,5 @@ public class Strings {
     public static String scourse = "course";
     public static String spayments = "payments";
     public static String sdata = "data";
+    public static String stuition = "tuition";
 }

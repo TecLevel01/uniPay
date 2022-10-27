@@ -1,5 +1,8 @@
 package com.matt.unipay.activities;
 
+import static com.matt.unipay.util.Strings.scourse;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.matt.unipay.R;
 import com.matt.unipay.model.CourseItem;
 import com.matt.unipay.util.Spacing;
+import com.matt.unipay.util.Strings;
 import com.matt.unipay.util.Util;
 
 public class Courses extends AppCompatActivity {
@@ -110,6 +114,7 @@ public class Courses extends AppCompatActivity {
             imgViewEnd = itemView.findViewById(R.id.imageViewEnd);
             imgView = itemView.findViewById(R.id.imgView);
             imgView.setImageResource(R.drawable.ic_outline_library_books_24);
+            imgViewEnd.setImageResource(R.drawable.ic_baseline_edit_24);
 
             tv3.setVisibility(View.GONE);
 
@@ -119,8 +124,14 @@ public class Courses extends AppCompatActivity {
             tv1.setText(courseItem.getName());
             tv2.setText(courseItem.getTuition());
 
-            itemView.setOnClickListener(view -> {
+            imgViewEnd.setOnClickListener(view -> {
                 Util.showCourseSheet(itemView.getContext(), courseItem);
+            });
+            itemView.setOnClickListener(view -> {
+                Intent intent = new Intent(view.getContext(), StudentView.class);
+                intent.putExtra(scourse, courseItem.getName());
+                intent.putExtra(Strings.stuition, courseItem.tuition);
+                view.getContext().startActivity(intent);
             });
         }
     }

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.matt.unipay.R;
 import com.matt.unipay.adapters.DashboardAdapter;
 import com.matt.unipay.mobilemoney.MoMo;
@@ -32,6 +35,11 @@ public class Dashboard extends AppCompatActivity {
     private RecyclerView recView1, recView2;
     private ArrayList<DashboardItem> items1, items2;
     private FirebaseUser user;
+    private DashboardAdapter adapter1, adapter2;
+    private int tuition;
+    private boolean getCourse;
+    private TextView tvName, tvReg;
+    private View v2, v1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +56,8 @@ public class Dashboard extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();*/
 
-        moMo = new MoMo();
-        moMo.initMobileMoney(this);
+       /* moMo = new MoMo();
+        moMo.initMobileMoney(this);*/
 
        /* AirtelPay airtelPay = new AirtelPay(this);
         airtelPay.initPay2();*/
@@ -63,40 +71,83 @@ public class Dashboard extends AppCompatActivity {
             Util.userRef.document(user.getUid()).addSnapshotListener((value, error) -> {
                 if (error == null) {
                     if (value.exists()) {
+                        clearList();
+
                         UserItem userItem = value.toObject(UserItem.class);
+                        tvName.setText(String.format("%s %s", userItem.getFname(), userItem.getLname()));
+                        tvReg.setText(userItem.getRegno());
 
-                        items1.add(new DashboardItem("Tuition", PriceFormat(900000)));
-                        items1.add(new DashboardItem("Paid Amount", PriceFormat(userItem.getPaid())));
-                        items1.add(new DashboardItem("Balance", PriceFormat(300000)));
+                        // run for the first time
+                        if (!getCourse) {
+                            Query query = Util.courseRef.whereEqualTo("name", userItem.getCourse());
+                            query.get().addOnSuccessListener(queryDocumentSnapshots -> {
+                                for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                                    tuition = snapshot.getDouble("tuition").intValue();
 
-                        items2.add(new DashboardItem("Year of Study", userItem.getYear()));
-                        items2.add(new DashboardItem("Semester", userItem.getSem()));
-                        items2.add(new DashboardItem("Course", userItem.getCourse()));
+                                    setFinancials(tuition, userItem.getPaid());
+                                    setDetails(userItem);
 
-                        DashboardAdapter adapter2 = new DashboardAdapter(this, items2, R.drawable.ic_outline_library_books_24);
-                        recView2.setAdapter(adapter2);
+                                    getCourse = true;
+                                }
+                            });
+                        } else {
+                            setFinancials(tuition, userItem.getPaid());
+                            setDetails(userItem);
+                        }
 
-                        DashboardAdapter adapter1 = new DashboardAdapter(this, items1, R.drawable.ic_baseline_attach_money_24);
-                        recView1.setAdapter(adapter1);
                     }
                 }
             });
+
+            adapter2 = new DashboardAdapter(this, items2, R.drawable.ic_outline_library_books_24);
+            recView2.setAdapter(adapter2);
+
+            adapter1 = new DashboardAdapter(this, items1, R.drawable.ic_baseline_attach_money_24);
+            recView1.setAdapter(adapter1);
         }
 
     }
 
+    private void setDetails(UserItem userItem) {
+        items2.add(new DashboardItem("Course", userItem.getCourse()));
+        items2.add(new DashboardItem("Year of Study", userItem.getYear()));
+        items2.add(new DashboardItem("Semester", userItem.getSem()));
+        Util.hideProgress(v2);
+
+        adapter2.notifyDataSetChanged();
+    }
+
+    private void setFinancials(int tuition, int paid) {
+        Util.hideProgress(v1);
+        items1.add(new DashboardItem("Tuition", PriceFormat(tuition)));
+        items1.add(new DashboardItem("Paid Amount", PriceFormat(paid)));
+        // set balance
+        items1.add(new DashboardItem("Balance", PriceFormat(tuition - paid)));
+        adapter1.notifyDataSetChanged();
+    }
+
+    private void clearList() {
+        items1.clear();
+        items2.clear();
+        adapter1.notifyDataSetChanged();
+        adapter2.notifyDataSetChanged();
+    }
+
     private void mInit() {
-        recView1 = findViewById(R.id.recView1);
-        recView2 = findViewById(R.id.recView2);
+        v1 = findViewById(R.id.v1);
+        v2 = findViewById(R.id.v2);
+        recView1 = v1.findViewById(R.id.recView);
+        recView2 = v2.findViewById(R.id.recView);
         items1 = new ArrayList<>();
         items2 = new ArrayList<>();
+        tvName = findViewById(R.id.tvName);
+        tvReg = findViewById(R.id.tvReg);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         checkUser();
-
     }
 
     @Override

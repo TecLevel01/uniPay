@@ -67,7 +67,7 @@ public class Register extends AppCompatActivity {
     }
 
     private void mInit() {
-        autoCompleteTextView = findViewById(R.id.list1);
+        autoCompleteTextView = findViewById(R.id.gender);
         courseAC = findViewById(R.id.course);
         etEmail = findViewById(R.id.email);
         etPwrd = findViewById(R.id.pwrd);

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.preference.PreferenceManager;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.matt.unipay.R;
 import com.matt.unipay.model.CourseItem;
+import com.matt.unipay.model.UserItem;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -112,6 +114,39 @@ public class Util {
         bottomSheetDialog.show();
     }
 
+    public static void showStudentSheet(Context context, UserItem userItem, int tuition) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.AppBottomSheetDialogTheme);
+        bottomSheetDialog.setContentView(R.layout.student_details);
+
+
+        EditText etEmail = bottomSheetDialog.findViewById(R.id.email),
+                gender = bottomSheetDialog.findViewById(R.id.gender),
+                courseAC = bottomSheetDialog.findViewById(R.id.course),
+                yearAc = bottomSheetDialog.findViewById(R.id.year),
+                semAc = bottomSheetDialog.findViewById(R.id.sem),
+                etFname = bottomSheetDialog.findViewById(R.id.fname),
+                etLname = bottomSheetDialog.findViewById(R.id.lname),
+                etPaid = bottomSheetDialog.findViewById(R.id.paid),
+                etbalance = bottomSheetDialog.findViewById(R.id.balance),
+                etRegNo = bottomSheetDialog.findViewById(R.id.regno);
+
+        View v1 = bottomSheetDialog.findViewById(R.id.v1);
+        v1.setVisibility(View.VISIBLE);
+
+        gender.setText(userItem.getGender());
+        semAc.setText(userItem.getSem());
+        yearAc.setText(userItem.getYear());
+        courseAC.setText(userItem.getCourse());
+        etPaid.setText(PriceFormat(userItem.getPaid()));
+        etRegNo.setText(userItem.getRegno());
+        etLname.setText(userItem.getLname());
+        etFname.setText(userItem.getFname());
+        etbalance.setText(PriceFormat(tuition - userItem.getPaid()));
+
+
+        bottomSheetDialog.show();
+    }
+
     public static void SetSharedPrefs(Context context, String key, String s) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         sharedPreferences.edit().putString(key, s).apply();
@@ -165,6 +200,13 @@ public class Util {
         dialog.setContentView(layoutID);
         dialog.show();
         return dialog;
+    }
+
+    public static boolean onOptionsItemSelected(Context context, MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            ((Activity) context).finish();
+        }
+        return false;
     }
 
     public static class MyProgressDialog extends ProgressDialog {
