@@ -56,6 +56,10 @@ public class Payment extends AppCompatActivity {
     }
 
     public void openPinModal(View view) {
+        validate(0);
+    }
+
+    private void validate(int i) {
         year = yearAC.getText().toString();
         sem = semAC.getText().toString();
         String a = etAmount.getText().toString();
@@ -65,7 +69,11 @@ public class Payment extends AppCompatActivity {
         }
 
         if (!year.isEmpty() && !sem.isEmpty() && amount != 0) {
-            pinModal();
+            if (i == 0) {
+                pinModal();
+            } else {
+                Util.showBankSheet(this, this::makePayment);
+            }
         } else {
             Util.snackbar(this, "Fill all fields");
         }
@@ -93,7 +101,7 @@ public class Payment extends AppCompatActivity {
 
     private void makePayment() {
         pinDialog.dismiss();
-        Util.MyProgressDialog dialog = new Util.MyProgressDialog(this, "Processing payment...");
+        Util.MyProgressDialog dialog = new Util.MyProgressDialog(this, "Processing payment");
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("year", year);
@@ -103,10 +111,14 @@ public class Payment extends AppCompatActivity {
 
         Util.paymentsRef.document(user.getUid()).collection(Strings.sdata).add(map)
                 .addOnSuccessListener(reference -> {
-                    Util.userRef.document(user.getUid()).update("paid",  FieldValue.increment(amount)).addOnSuccessListener(runnable -> {
+                    Util.userRef.document(user.getUid()).update("paid", FieldValue.increment(amount)).addOnSuccessListener(runnable -> {
                         dialog.dismiss();
                         finish();
                     });
                 });
+    }
+
+    public void openBankCard(View view) {
+        validate(1);
     }
 }

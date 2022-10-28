@@ -61,8 +61,7 @@ public class Util {
 
 
     public static void showCourseSheet(Context context, CourseItem courseItem) {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.AppBottomSheetDialogTheme);
-        bottomSheetDialog.setContentView(R.layout.course_modal);
+        BottomSheetDialog bottomSheetDialog = MyBottomSheetDialog(context, R.layout.course_modal);
 
         EditText cname, tuition;
         Button btnSave, btnDel;
@@ -111,13 +110,28 @@ public class Util {
                 bottomSheetDialog.hide();
             }
         });
+    }
+
+    public static BottomSheetDialog MyBottomSheetDialog(Context context, int layoutRes) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.AppBottomSheetDialogTheme);
+        bottomSheetDialog.setContentView(layoutRes);
         bottomSheetDialog.show();
+        return bottomSheetDialog;
+    }
+
+    public static void showBankSheet(Context context, Runnable runnable) {
+        BottomSheetDialog bottomSheetDialog = MyBottomSheetDialog(context, R.layout.bank_modal);
+        EditText cno = bottomSheetDialog.findViewById(R.id.cno);
+        Button btnPay = bottomSheetDialog.findViewById(R.id.btnPay);
+        btnPay.setOnClickListener(view -> {
+            if (cno != null) {
+                runnable.run();
+            }
+        });
     }
 
     public static void showStudentSheet(Context context, UserItem userItem, int tuition) {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.AppBottomSheetDialogTheme);
-        bottomSheetDialog.setContentView(R.layout.student_details);
-
+        BottomSheetDialog bottomSheetDialog = MyBottomSheetDialog(context, R.layout.student_details);
 
         EditText etEmail = bottomSheetDialog.findViewById(R.id.email),
                 gender = bottomSheetDialog.findViewById(R.id.gender),
@@ -143,8 +157,6 @@ public class Util {
         etFname.setText(userItem.getFname());
         etbalance.setText(PriceFormat(tuition - userItem.getPaid()));
 
-
-        bottomSheetDialog.show();
     }
 
     public static void SetSharedPrefs(Context context, String key, String s) {
