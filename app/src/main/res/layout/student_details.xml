@@ -146,6 +146,13 @@
                 android:singleLine="true"
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="SAVE"
+            android:textSize="12sp" />
     </LinearLayout>
 
 

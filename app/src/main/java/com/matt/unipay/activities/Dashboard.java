@@ -21,7 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.matt.unipay.R;
 import com.matt.unipay.adapters.DashboardAdapter;
-import com.matt.unipay.mobilemoney.MoMo;
+import com.matt.unipay.classes.Reports;
 import com.matt.unipay.model.DashboardItem;
 import com.matt.unipay.model.UserItem;
 import com.matt.unipay.util.Util;
@@ -30,8 +30,6 @@ import java.util.ArrayList;
 
 public class Dashboard extends AppCompatActivity {
 
-    String scourse, syear, ssem;
-    private MoMo moMo;
     private RecyclerView recView1, recView2;
     private ArrayList<DashboardItem> items1, items2;
     private FirebaseUser user;
@@ -40,6 +38,7 @@ public class Dashboard extends AppCompatActivity {
     private boolean getCourse;
     private TextView tvName, tvReg;
     private View v2, v1;
+    private UserItem userItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +72,7 @@ public class Dashboard extends AppCompatActivity {
                     if (value.exists()) {
                         clearList();
 
-                        UserItem userItem = value.toObject(UserItem.class);
+                        userItem = value.toObject(UserItem.class);
                         tvName.setText(String.format("%s %s", userItem.getFname(), userItem.getLname()));
                         tvReg.setText(userItem.getRegno());
 
@@ -194,5 +193,14 @@ public class Dashboard extends AppCompatActivity {
 
     public void openTransactions(View view) {
         Util.loadActivity(this, Transactions.class);
+    }
+
+    public void openStudentDetails(View view) {
+        Util.showStudentSheet(this, userItem, tuition);
+    }
+
+    public void openReports(View view) {
+        Reports reports = new Reports(tuition, userItem, this, user);
+        reports.loadLedger();
     }
 }

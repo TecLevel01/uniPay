@@ -19,6 +19,8 @@ import android.widget.ProgressBar;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.matt.unipay.R;
@@ -55,8 +57,10 @@ public class Util {
         return formatter.format(date);
     }
 
-    public static HashMap<String, Object> map() {
-        return new HashMap<>();
+    public static String dateFormat2(Date date) {
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("dd-MMM-yy");
+        return formatter.format(date);
     }
 
 
@@ -67,6 +71,7 @@ public class Util {
         Button btnSave, btnDel;
 
         cname = bottomSheetDialog.findViewById(R.id.cname);
+        cname.setFocusable(false);
         tuition = bottomSheetDialog.findViewById(R.id.tuition);
         btnSave = bottomSheetDialog.findViewById(R.id.btnSave);
         btnDel = bottomSheetDialog.findViewById(R.id.btnDel);
@@ -95,7 +100,7 @@ public class Util {
 
                 int ituition = Integer.valueOf(stuition);
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("name", scname);
+//                map.put("name", scname);
                 map.put("tuition", ituition);
 
                 if (courseItem != null) {
@@ -144,8 +149,11 @@ public class Util {
                 etbalance = bottomSheetDialog.findViewById(R.id.balance),
                 etRegNo = bottomSheetDialog.findViewById(R.id.regno);
 
-        View v1 = bottomSheetDialog.findViewById(R.id.v1);
+        View v1 = bottomSheetDialog.findViewById(R.id.v1),
+                v2 = bottomSheetDialog.findViewById(R.id.btnSave);
+
         v1.setVisibility(View.VISIBLE);
+        v2.setVisibility(View.VISIBLE);
 
         gender.setText(userItem.getGender());
         semAc.setText(userItem.getSem());
@@ -156,6 +164,29 @@ public class Util {
         etLname.setText(userItem.getLname());
         etFname.setText(userItem.getFname());
         etbalance.setText(PriceFormat(tuition - userItem.getPaid()));
+
+        etRegNo.setFocusable(false);
+        etbalance.setFocusable(false);
+        etPaid.setFocusable(false);
+
+        v2.setOnClickListener(view -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String fname = etFname.getText().toString().trim(),
+                    lname = etLname.getText().toString().trim();
+            if (!fname.isEmpty() && !lname.isEmpty())
+                if (user != null) {
+                    MyProgressDialog d = new MyProgressDialog(context, "Updating");
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("fname", fname);
+                    map.put("lname", lname);
+                    Util.userRef.document(user.getUid()).update(map).addOnSuccessListener(runnable -> {
+                        snackbar(context, "Updated Successfully");
+                        d.dismiss();
+                    });
+                    bottomSheetDialog.dismiss();
+                }
+        });
 
     }
 

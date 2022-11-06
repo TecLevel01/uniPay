@@ -33,9 +33,9 @@
         android:text="Your transaction has been successful" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnView"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:onClick="openOrders"
         android:text="View TRANSACTION"
         android:textSize="12sp" />
 

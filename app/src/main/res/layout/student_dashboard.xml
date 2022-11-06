@@ -16,6 +16,8 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/rounded_all"
             android:backgroundTint="@color/primary_500"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:onClick="openStudentDetails"
             android:orientation="vertical"
             android:padding="15dp">
 
@@ -187,6 +189,16 @@
                 android:textSize="13sp"
                 android:theme="@style/IconButtonStyle"
                 app:icon="@drawable/ic_outline_library_books_24" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:onClick="openReports"
+                android:text="REPORTS"
+                android:textAllCaps="true"
+                android:textSize="13sp"
+                android:theme="@style/IconButtonStyle"
+                app:icon="@drawable/ic_twotone_insert_drive_file_24" />
 
         </LinearLayout>
     </LinearLayout>

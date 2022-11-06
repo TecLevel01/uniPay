@@ -28,7 +28,7 @@ public class Payment extends AppCompatActivity {
     private AutoCompleteTextView yearAC, semAC;
     private FirebaseUser user;
     private EditText etAmount;
-    private Dialog pinDialog;
+    private Dialog pinDialog, successDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +45,7 @@ public class Payment extends AppCompatActivity {
         yearAC = Util.setYearAC(getWindow().getDecorView().getRootView());
         semAC = Util.setSemAC(getWindow().getDecorView().getRootView());
         etAmount = findViewById(R.id.etAmount);
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -89,8 +90,9 @@ public class Payment extends AppCompatActivity {
             String phone = etPhone.getText().toString().trim(),
                     pin = etPin.getText().toString().trim();
             if (!phone.isEmpty() && !pin.isEmpty()) {
-                user = FirebaseAuth.getInstance().getCurrentUser();
+
                 if (user != null) {
+                    pinDialog.dismiss();
                     makePayment();
                 }
             } else {
@@ -100,7 +102,7 @@ public class Payment extends AppCompatActivity {
     }
 
     private void makePayment() {
-        pinDialog.dismiss();
+
         Util.MyProgressDialog dialog = new Util.MyProgressDialog(this, "Processing payment");
 
         HashMap<String, Object> map = new HashMap<>();
@@ -110,15 +112,23 @@ public class Payment extends AppCompatActivity {
         map.put("timestamp", new Date());
 
         Util.paymentsRef.document(user.getUid()).collection(Strings.sdata).add(map)
-                .addOnSuccessListener(reference -> {
-                    Util.userRef.document(user.getUid()).update("paid", FieldValue.increment(amount)).addOnSuccessListener(runnable -> {
-                        dialog.dismiss();
-                        finish();
-                    });
-                });
+                .addOnSuccessListener(reference -> Util.userRef.document(user.getUid())
+                        .update("paid", FieldValue.increment(amount))
+                        .addOnSuccessListener(runnable -> {
+                            dialog.dismiss();
+
+
+                            successDialog = Util.dialog(this, R.layout.payment_success);
+                            Button view = successDialog.findViewById(R.id.btnView);
+                            view.setOnClickListener(view1 -> Util.loadActivity(this, Transactions.class));
+
+                            successDialog.setOnDismissListener(dialogInterface -> finish());
+
+                        }));
     }
 
     public void openBankCard(View view) {
         validate(1);
     }
+
 }

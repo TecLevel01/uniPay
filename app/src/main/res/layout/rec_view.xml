@@ -7,9 +7,9 @@
     <ProgressBar
         android:id="@+id/progBar"
         android:layout_width="30dp"
-        android:indeterminateTint="@color/primary_500"
         android:layout_height="30dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/primary_500" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recView"
