@@ -102,7 +102,7 @@
 
     <include layout="@layout/divider" />
 
-    <include layout="@layout/rec_view" />
+        <include layout="@layout/rec_view" />
 
     <include layout="@layout/divider" />
 
@@ -146,5 +146,17 @@
                 android:textStyle="bold" />
         </TableRow>
     </TableLayout>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_all"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:padding="10dp"
+        android:text="Not Cleared"
+        android:textColor="@color/white" />
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import static com.matt.unipay.util.Util.PriceFormat;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +44,11 @@ public class Reports {
 
     public void loadLedger() {
         Dialog dialog = Util.dialog(context, R.layout.reports_dialog);
+
         TextView tvCredit = dialog.findViewById(R.id.tvCredit),
                 tvDebit = dialog.findViewById(R.id.tvDebit),
-                tvDate = dialog.findViewById(R.id.tvDate);
+                tvDate = dialog.findViewById(R.id.tvDate),
+                tvStatus = dialog.findViewById(R.id.tvStatus);
 
         RecyclerView recyclerView = dialog.findViewById(R.id.recView);
 
@@ -72,14 +75,21 @@ public class Reports {
                 holder.setData(model);
                 paid += model.getPaid();
                 tvCredit.setText(PriceFormat(paid));
+
+                if (paid >= tuition) {
+                    tvStatus.setText("Cleared");
+                    tvStatus.getBackground().setColorFilter(context.getResources().getColor(R.color.primary_500), PorterDuff.Mode.MULTIPLY);
+                }
+
             }
 
             @Override
             public void onDataChanged() {
-                if (adapter.getItemCount() == 0) {
+              /*  if (adapter.getItemCount() > 0) {
 
-                }
+                }*/
                 Util.hideProgress(dialog.getWindow().getDecorView());
+
             }
         };
 
