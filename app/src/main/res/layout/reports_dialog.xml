@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginHorizontal="10dp"
@@ -37,8 +38,17 @@
             android:textColor="@color/primary_500"
             android:textSize="20sp"
             android:textStyle="bold" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/printBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110sp"
+            android:text="Print"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
 
     </LinearLayout>
+
 
     <TextView
         android:layout_width="wrap_content"

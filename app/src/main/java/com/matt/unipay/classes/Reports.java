@@ -1,14 +1,16 @@
 package com.matt.unipay.classes;
 
 import static com.matt.unipay.util.Util.PriceFormat;
-
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -23,10 +25,9 @@ import com.matt.unipay.model.PaymentItem;
 import com.matt.unipay.model.UserItem;
 import com.matt.unipay.util.Strings;
 import com.matt.unipay.util.Util;
-
 import java.util.Date;
 
-public class Reports {
+public class Reports extends Activity {
 
     private final int tuition;
     private final UserItem userItem;
@@ -49,6 +50,8 @@ public class Reports {
                 tvDebit = dialog.findViewById(R.id.tvDebit),
                 tvDate = dialog.findViewById(R.id.tvDate),
                 tvStatus = dialog.findViewById(R.id.tvStatus);
+        Button pBtn = dialog.findViewById(R.id.printBtn);
+
 
         RecyclerView recyclerView = dialog.findViewById(R.id.recView);
 
@@ -93,7 +96,9 @@ public class Reports {
             }
         };
 
-
+        pBtn.setOnClickListener(view -> {
+            Toast.makeText(context, "No Printer Found", Toast.LENGTH_SHORT).show();
+        });
         recyclerView.setAdapter(adapter);
 
         tvDate.setText(Util.dateFormat(new Date()));

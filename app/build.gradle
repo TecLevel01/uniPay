@@ -45,4 +45,8 @@ dependencies {
 
     //GSON Object
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    //Print report Library
+//    implementation 'com.itextpdf:itextg:5.5.10'
+//    implementation 'com.karumi:dexter:5.0.0'
 }
