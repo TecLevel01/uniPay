@@ -1,11 +1,19 @@
 package com.matt.unipay.model;
 
 public class UserItem {
-    String fname, lname, email, course, gender, regno, year, sem;
+    String uid, fname, lname, email, course, gender, regno, year, sem;
     int paid;
 
     public int getPaid() {
         return paid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getFname() {

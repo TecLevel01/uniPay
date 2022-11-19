@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.matt.unipay.R;
 import com.matt.unipay.model.CourseItem;
 import com.matt.unipay.model.UserItem;
@@ -69,14 +70,13 @@ public class Util {
 
         EditText cname, tuition;
         Button btnSave, btnDel;
-
         cname = bottomSheetDialog.findViewById(R.id.cname);
-        cname.setFocusable(false);
         tuition = bottomSheetDialog.findViewById(R.id.tuition);
         btnSave = bottomSheetDialog.findViewById(R.id.btnSave);
         btnDel = bottomSheetDialog.findViewById(R.id.btnDel);
 
         if (courseItem != null) {
+            cname.setFocusable(false);
             cname.setText(courseItem.getName());
             tuition.setText(String.valueOf(courseItem.tuition));
         } else {
@@ -100,7 +100,7 @@ public class Util {
 
                 int ituition = Integer.valueOf(stuition);
                 HashMap<String, Object> map = new HashMap<>();
-//                map.put("name", scname);
+                map.put("name", scname);
                 map.put("tuition", ituition);
 
                 if (courseItem != null) {
@@ -135,19 +135,31 @@ public class Util {
         });
     }
 
-    public static void showStudentSheet(Context context, UserItem userItem, int tuition) {
+    public static void showStudentSheet(Context context, UserItem userItem, int tuition, int status) {
         BottomSheetDialog bottomSheetDialog = MyBottomSheetDialog(context, R.layout.student_details);
 
         EditText etEmail = bottomSheetDialog.findViewById(R.id.email),
                 gender = bottomSheetDialog.findViewById(R.id.gender),
                 courseAC = bottomSheetDialog.findViewById(R.id.course),
-                yearAc = bottomSheetDialog.findViewById(R.id.year),
-                semAc = bottomSheetDialog.findViewById(R.id.sem),
+//                yearAc = bottomSheetDialog.findViewById(R.id.year),
+//                semAc = bottomSheetDialog.findViewById(R.id.sem),
                 etFname = bottomSheetDialog.findViewById(R.id.fname),
                 etLname = bottomSheetDialog.findViewById(R.id.lname),
                 etPaid = bottomSheetDialog.findViewById(R.id.paid),
                 etbalance = bottomSheetDialog.findViewById(R.id.balance),
                 etRegNo = bottomSheetDialog.findViewById(R.id.regno);
+
+        AutoCompleteTextView yearAc = bottomSheetDialog.findViewById(R.id.year),
+                semAc = bottomSheetDialog.findViewById(R.id.sem);
+
+        semAc.setText(userItem.getSem());
+        yearAc.setText(userItem.getYear());
+
+        if (status != 0) {
+            yearAc = Util.setYearAC(bottomSheetDialog.getWindow().getDecorView());
+            semAc = Util.setSemAC(bottomSheetDialog.getWindow().getDecorView());
+        }
+
 
         View v1 = bottomSheetDialog.findViewById(R.id.v1),
                 v2 = bottomSheetDialog.findViewById(R.id.btnSave);
@@ -156,8 +168,6 @@ public class Util {
         v2.setVisibility(View.VISIBLE);
 
         gender.setText(userItem.getGender());
-        semAc.setText(userItem.getSem());
-        yearAc.setText(userItem.getYear());
         courseAC.setText(userItem.getCourse());
         etPaid.setText(PriceFormat(userItem.getPaid()));
         etRegNo.setText(userItem.getRegno());
@@ -169,10 +179,16 @@ public class Util {
         etbalance.setFocusable(false);
         etPaid.setFocusable(false);
 
+        AutoCompleteTextView finalSemAc = semAc;
+        AutoCompleteTextView finalYearAc = yearAc;
+
+
         v2.setOnClickListener(view -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String fname = etFname.getText().toString().trim(),
-                    lname = etLname.getText().toString().trim();
+                    lname = etLname.getText().toString().trim(),
+                    year = finalYearAc.getText().toString(),
+                    sem = finalSemAc.getText().toString();
             if (!fname.isEmpty() && !lname.isEmpty())
                 if (user != null) {
                     MyProgressDialog d = new MyProgressDialog(context, "Updating");
@@ -180,7 +196,18 @@ public class Util {
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("fname", fname);
                     map.put("lname", lname);
-                    Util.userRef.document(user.getUid()).update(map).addOnSuccessListener(runnable -> {
+
+                    if (status != 0) {
+                        map.put("year", year);
+                        map.put("sem", sem);
+                    }
+
+                    String uid = userItem.getUid();
+                    if (userItem.getUid() == null) {
+                        uid = user.getUid();
+                    }
+
+                    Util.userRef.document(uid).set(map, SetOptions.merge()).addOnSuccessListener(runnable -> {
                         snackbar(context, "Updated Successfully");
                         d.dismiss();
                     });

@@ -56,7 +56,11 @@ public class StudentView extends AppCompatActivity {
 
         FirestoreRecyclerOptions<UserItem> options = new FirestoreRecyclerOptions.Builder<UserItem>()
                 .setLifecycleOwner(this)
-                .setQuery(query, UserItem.class)
+                .setQuery(query, snapshot -> {
+                    UserItem userItem = snapshot.toObject(UserItem.class);
+                    userItem.setUid(snapshot.getId());
+                    return userItem;
+                })
                 .build();
         adapter = new FirestoreRecyclerAdapter<UserItem, ViewHolder>(options) {
 
@@ -104,7 +108,7 @@ public class StudentView extends AppCompatActivity {
             tv3.setText(String.format("%s - %s", userItem.getYear(), userItem.getSem()));
 
             itemView.setOnClickListener(view -> {
-                Util.showStudentSheet(view.getContext(), userItem, tuition);
+                Util.showStudentSheet(view.getContext(), userItem, tuition, 1);
             });
         }
     }

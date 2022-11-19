@@ -196,7 +196,7 @@ public class Dashboard extends AppCompatActivity {
     }
 
     public void openStudentDetails(View view) {
-        Util.showStudentSheet(this, userItem, tuition);
+        Util.showStudentSheet(this, userItem, tuition, 0);
     }
 
     public void openReports(View view) {
